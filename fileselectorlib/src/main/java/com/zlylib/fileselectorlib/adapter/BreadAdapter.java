@@ -27,6 +27,6 @@ public class BreadAdapter extends BaseQuickAdapter<BreadModel, BaseViewHolder> {
     @Override
     protected void convert(BaseViewHolder helper, BreadModel item) {
         helper.setText(R.id.btn_bread,item.getCurName());
-//        helper.addOnClickListener(R.id.btn_bread);
+        helper.addOnClickListener(R.id.btn_bread);
     }
 }
