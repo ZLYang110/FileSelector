@@ -9,9 +9,8 @@
 ### Example
 
 ---
-![FileSelector](https://github.com/ZLYang110/FileSelector/tree/master/screenshot/Screenshot_20200622_135013.jpg)  ![FileSelector](https://github.com/ZLYang110/FileSelector/tree/master/screenshot/Screenshot_20200622_135034.jpg)
-![FileSelector](https://github.com/ZLYang110/FileSelector/tree/master/screenshot/Screenshot_20200622_135143.jpg)  ![FileSelector](https://github.com/ZLYang110/FileSelector/tree/master/screenshot/Screenshot_20200622_135702.jpg)
-
+<img src="https://github.com/ZLYang110/FileSelector/blob/master/screenshot/Screenshot_20200622_135034.jpg" width = "180" height = "320" alt="图片名称"/>     <img src="https://github.com/ZLYang110/FileSelector/blob/master/screenshot/Screenshot_20200622_135013.jpg" width = "180" height = "320" alt="图片名称"/>
+<img src="https://github.com/ZLYang110/FileSelector/blob/master/screenshot/Screenshot_20200622_135143.jpg" width = "180" height = "320" alt="图片名称"/>     <img src="https://github.com/ZLYang110/FileSelector/blob/master/screenshot/Screenshot_20200622_135702.jpg" width = "180" height = "320" alt="图片名称"/>
 ---
 
 ### 可下载APK直接体验
