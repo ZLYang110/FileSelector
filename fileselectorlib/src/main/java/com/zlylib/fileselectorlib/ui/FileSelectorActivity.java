@@ -16,6 +16,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.listener.OnItemChildClickListener;
+import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.zlylib.fileselectorlib.R;
 import com.zlylib.fileselectorlib.SelectOptions;
@@ -37,7 +39,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FileSelectorActivity extends AppCompatActivity implements BaseQuickAdapter.OnItemClickListener, BaseQuickAdapter.OnItemChildClickListener,
+public class FileSelectorActivity extends AppCompatActivity implements OnItemClickListener, OnItemChildClickListener,
         View.OnClickListener,FileListAdapter.onLoadFileCountListener, EssFileListCallBack, EssFileCountCallBack {
 
     /*当前目录，默认是SD卡根目录*/
@@ -116,13 +118,13 @@ public class FileSelectorActivity extends AppCompatActivity implements BaseQuick
         mAdapter = new FileListAdapter(new ArrayList<EssFile>());
         mAdapter.setLoadFileCountListener(this);
         mRecyclerView.setAdapter(mAdapter);
-        mAdapter.bindToRecyclerView(mRecyclerView);
+        mAdapter.onAttachedToRecyclerView(mRecyclerView);
         mAdapter.setOnItemClickListener(this);
 
         mBreadRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         mBreadAdapter = new BreadAdapter(new ArrayList<BreadModel>());
         mBreadRecyclerView.setAdapter(mBreadAdapter);
-        mBreadAdapter.bindToRecyclerView(mBreadRecyclerView);
+        mBreadAdapter.onAttachedToRecyclerView(mBreadRecyclerView);
         mBreadAdapter.setOnItemChildClickListener(this);
 
     }
@@ -158,8 +160,8 @@ public class FileSelectorActivity extends AppCompatActivity implements BaseQuick
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         final SelectSdcardAdapter adapter = new SelectSdcardAdapter(FileUtils.getAllSdCardList(mSdCardList));
         recyclerView.setAdapter(adapter);
-        adapter.bindToRecyclerView(recyclerView);
-        adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+        adapter.onAttachedToRecyclerView(recyclerView);
+        adapter.setOnItemClickListener(new  OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapterIn, View view, int position) {
                 mSelectSdCardWindow.dismiss();
@@ -182,7 +184,7 @@ public class FileSelectorActivity extends AppCompatActivity implements BaseQuick
     }
 
     @Override
-    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+    public void onItemClick(BaseQuickAdapter adapter, View view, final int position) {
         if (adapter.equals(mAdapter)) {
             EssFile item = mAdapter.getData().get(position);
 
@@ -234,7 +236,8 @@ public class FileSelectorActivity extends AppCompatActivity implements BaseQuick
                     mSelectedList.add(item.getAbsolutePath());
                 }
                 mAdapter.getData().get(position).setChecked(!mAdapter.getData().get(position).isChecked());
-                mAdapter.notifyItemChanged(position, "");
+               // mAdapter.notifyItemChanged(position, "");
+                mAdapter.notifyDataSetChanged();
                 abc.getRightTextView().setText(String.format(getString(R.string.selected_file_count), String.valueOf(mSelectedFileList.size()), String.valueOf(SelectOptions.getInstance().maxCount)));
             }
         }
@@ -268,10 +271,10 @@ public class FileSelectorActivity extends AppCompatActivity implements BaseQuick
             mAdapter.setEmptyView(R.layout.empty_file_list);
         }
         mCurFolder = queryPath;
-        mAdapter.setNewData(fileList);
+        mAdapter.setNewInstance(fileList);
         List<BreadModel> breadModelList = FileUtils.getBreadModeListFromPath(mSdCardList, mCurFolder);
         if (mHasChangeSdCard) {
-            mBreadAdapter.setNewData(breadModelList);
+            mBreadAdapter.setNewInstance(breadModelList);
             mHasChangeSdCard = false;
         } else {
             if (breadModelList.size() > mBreadAdapter.getData().size()) {
@@ -297,7 +300,8 @@ public class FileSelectorActivity extends AppCompatActivity implements BaseQuick
     @Override
     public void onFindChildFileAndFolderCount(int position, String childFileCount, String childFolderCount) {
         mAdapter.getData().get(position).setChildCounts(childFileCount, childFolderCount);
-        mAdapter.notifyItemChanged(position, "childCountChanges");
+       // mAdapter.notifyItemChanged(position, "childCountChanges");
+        mAdapter. notifyDataSetChanged();
     }
 
     @Override

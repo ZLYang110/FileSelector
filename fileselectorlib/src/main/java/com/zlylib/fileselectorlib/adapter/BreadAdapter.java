@@ -7,7 +7,7 @@ import android.annotation.SuppressLint;
 import androidx.annotation.Nullable;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.chad.library.adapter.base.BaseViewHolder;
+import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.zlylib.fileselectorlib.R;
 import com.zlylib.fileselectorlib.bean.BreadModel;
 
@@ -27,6 +27,5 @@ public class BreadAdapter extends BaseQuickAdapter<BreadModel, BaseViewHolder> {
     @Override
     protected void convert(BaseViewHolder helper, BreadModel item) {
         helper.setText(R.id.btn_bread,item.getCurName());
-        helper.addOnClickListener(R.id.btn_bread);
     }
 }

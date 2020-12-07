@@ -5,6 +5,7 @@
 2. 可通过扫描全盘的方式，选择指定后缀名的文件
 3. 支持多选。
 4. 支持Activity、Fragment
+4. 支持androidX
 
 ### Example
 
@@ -14,7 +15,7 @@
 ---
 
 ### 可下载APK直接体验
-[Demo.apk](https://github.com/ZLYang110/FileSelector/tree/master/app/release\app-release.apk)
+[Demo.apk](https://github.com/ZLYang110/FileSelector/blob/master/app/release/app-release.apk)
 
 
 ---
@@ -123,6 +124,12 @@ maxCount | 最大可选中数量 | 10
 request_code | 请求码 | 无
 onlyShowFolder | 是否仅只显示文件夹  | false
 onlySelectFolder | 是否只选择文件夹  | false
+
+# 更新日志
+
+2.0.0
+----
+  -  适配Androidx
 
 
 ### THANKS

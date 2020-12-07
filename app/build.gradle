@@ -31,5 +31,6 @@ dependencies {
     //权限申请
     implementation 'com.github.ZLYang110:MyPermission:1.0'
     implementation project(':fileselectorlib')
-   // implementation 'com.github.ZLYang110:FileSelector:1.0.2'
+    // implementation 'com.github.ZLYang110:FileSelector:1.0.2'
+    implementation 'com.github.ZLYang110:UpperDialog:1.4.1'
 }
