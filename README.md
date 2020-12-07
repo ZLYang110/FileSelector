@@ -32,7 +32,7 @@ allprojects {
 ```
 
 ```
-implementation 'com.github.ZLYang110:FileSelector:1.0'
+implementation 'com.github.ZLYang110:FileSelector:2.0.0'
 ```
 
 
