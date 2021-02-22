@@ -1,9 +1,12 @@
 package com.zlylib.fileselectorlib;
 
-import android.app.Activity;
-import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+
 import com.zlylib.fileselectorlib.ui.FileSelectorActivity;
 
 /**
@@ -83,7 +86,7 @@ public final class SelectCreator {
     }
 
     public void start() {
-        final Activity activity = filePicker.getActivity();
+        final Context activity = filePicker.getActivity();
         if (activity == null) {
             return;
         }
@@ -93,7 +96,7 @@ public final class SelectCreator {
         if (fragment != null) {
             fragment.startActivityForResult(intent, selectOptions.request_code);
         } else {
-            activity.startActivityForResult(intent, selectOptions.request_code);
+            ((AppCompatActivity)activity).startActivityForResult(intent, selectOptions.request_code);
         }
     }
 

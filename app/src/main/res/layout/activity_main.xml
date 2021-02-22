@@ -12,6 +12,19 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         >
+
+        <TextView
+            android:id="@+id/tv_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:gravity="center"
+            android:layout_marginBottom="20dp"
+            android:padding="12dp"
+            android:textColor="@color/black"
+            android:text="打开Fragment"
+            android:textSize="18sp"/>
+
         <TextView
             android:id="@+id/tv_open"
             android:layout_width="match_parent"
@@ -57,6 +70,7 @@
             android:padding="12dp"
             android:text="图片文件"
             android:textSize="18sp"/>
+
     </LinearLayout>
 
     <TextView

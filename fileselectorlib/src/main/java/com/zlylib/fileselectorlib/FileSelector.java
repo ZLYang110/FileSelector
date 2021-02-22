@@ -1,11 +1,12 @@
 package com.zlylib.fileselectorlib;
 
-import android.app.Activity;
-import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import com.zlylib.fileselectorlib.ui.FileSelectorActivity;
 
@@ -21,23 +22,23 @@ public class FileSelector {
     public static final int BY_SIZE_DESC = 5;
     public static final int BY_EXTENSION_ASC = 6;
 
-    private final WeakReference<Activity> mContext;
+    private final WeakReference<Context> mContext;
     private final WeakReference<Fragment> mFragment;
 
-    private FileSelector(Activity activity) {
+    private FileSelector(AppCompatActivity activity) {
         this(activity,null);
     }
 
     private FileSelector(Fragment fragment){
-        this(fragment.getActivity(),fragment);
+        this( fragment.getActivity(),fragment);
     }
 
-    private FileSelector(Activity mContext, Fragment mFragment) {
+    private FileSelector(Context mContext, Fragment mFragment) {
         this.mContext = new WeakReference<>(mContext);
         this.mFragment = new WeakReference<>(mFragment);
     }
 
-    public static SelectCreator from(Activity activity){
+    public static SelectCreator from(AppCompatActivity activity){
         return new FileSelector(activity).initFile();
     }
 
@@ -52,7 +53,7 @@ public class FileSelector {
 
 
 
-    public Activity getActivity() {
+    public Context getActivity() {
         return mContext.get();
     }
 

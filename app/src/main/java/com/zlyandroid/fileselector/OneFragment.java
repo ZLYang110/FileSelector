@@ -1,18 +1,19 @@
 package com.zlyandroid.fileselector;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.FileProvider;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import com.zlylib.fileselectorlib.FileSelector;
-import com.zlylib.fileselectorlib.bean.EssFile;
 import com.zlylib.fileselectorlib.utils.Const;
 import com.zlylib.mypermissionlib.RequestListener;
 
@@ -20,26 +21,28 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class OneFragment extends Fragment {
 
+    View view;
+    private TextView tv_fragment,tv_open, tv_showFolder, tv_onlyFolder, tv_onlyMP4, tv_onlyIMG, tv_backResult;
 
-    private TextView tv_fragment,tv_open,tv_showFolder,tv_onlyFolder,tv_onlyMP4,tv_onlyIMG,tv_backResult;
-
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.activity_main, container, false);
         initView();
+        return view;
+
     }
 
     private void initView() {
-        tv_fragment = findViewById(R.id.tv_fragment);
-        tv_open = findViewById(R.id.tv_open);
-        tv_backResult = findViewById(R.id.tv_backResult);
-        tv_showFolder = findViewById(R.id.tv_showFolder);
-        tv_onlyFolder = findViewById(R.id.tv_onlyFolder);
-        tv_onlyMP4 = findViewById(R.id.tv_onlyMP4);
-        tv_onlyIMG = findViewById(R.id.tv_onlyIMG);
+        tv_fragment = view.findViewById(R.id.tv_fragment);
+        tv_open = view.findViewById(R.id.tv_open);
+        tv_backResult = view.findViewById(R.id.tv_backResult);
+        tv_showFolder = view.findViewById(R.id.tv_showFolder);
+        tv_onlyFolder = view.findViewById(R.id.tv_onlyFolder);
+        tv_onlyMP4 = view.findViewById(R.id.tv_onlyMP4);
+        tv_onlyIMG = view.findViewById(R.id.tv_onlyIMG);
         tv_fragment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,23 +80,23 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
     private void downPermission(final int i) {
-         PermissionUtils.request(new RequestListener() {
+        PermissionUtils.request(new RequestListener() {
             @Override
             public void onSuccess() {
                 if(i == 0){
-                    MainFragment.start(getApplicationContext());
-                }else if(i == 1){
-                    openFileSelector( );
-                }else if(i == 2){
+                    Toast.makeText(getContext(),"你想要干嘛呀",Toast.LENGTH_SHORT).show();
+                }else if (i == 1) {
+                    openFileSelector();
+                } else if (i == 2) {
                     openOnlyShowFolder();
-                }else if(i == 3){
+                } else if (i == 3) {
                     openOnlyFolder();
-                }else if(i == 4){
+                } else if (i == 4) {
                     openOnlymp3();
-                }else if(i == 5){
-                   openOnlyIMG();
-
+                } else if (i == 5) {
+                    openOnlyIMG();
                 }
 
             }
@@ -101,36 +104,39 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailed() {
             }
-        }, MainActivity.this, PermissionUtils.PermissionGroup.PERMISSIONS_STORAGE);
+        }, OneFragment.this.getContext(), PermissionUtils.PermissionGroup.PERMISSIONS_STORAGE);
     }
+
     public static List<String> getFilesAllName(String path) {
-        File file=new File(path);
-        File[] files=file.listFiles();
-        if (files == null){Log.e("error","空目录");return null;}
+        File file = new File(path);
+        File[] files = file.listFiles();
+        if (files == null) {
+            Log.e("error", "空目录");
+            return null;
+        }
         List<String> s = new ArrayList<>();
-        for(int i =0;i<files.length;i++){
+        for (int i = 0; i < files.length; i++) {
             s.add(files[i].getAbsolutePath());
         }
-        Log.e("list",s.toString());
+        Log.e("list", s.toString());
         return s;
     }
 
 
     /**
-     *  设置 onlyShowFolder() 只显示文件夹 后 再设置setFileTypes（）不生效
-     *  设置 onlyShowFolder() 只显示文件夹 后 默认设置了onlySelectFolder（）
-     *  设置 onlySelectFolder() 只能选择文件夹 后 默认设置了isSingle（）
-     *  设置 isSingle() 只能选择一个 后 再设置了setMaxCount（） 不生效
-     *
+     * 设置 onlyShowFolder() 只显示文件夹 后 再设置setFileTypes（）不生效
+     * 设置 onlyShowFolder() 只显示文件夹 后 默认设置了onlySelectFolder（）
+     * 设置 onlySelectFolder() 只能选择文件夹 后 默认设置了isSingle（）
+     * 设置 isSingle() 只能选择一个 后 再设置了setMaxCount（） 不生效
      */
 
-    public void openFileSelector( ) {
+    public void openFileSelector() {
         FileSelector.from(this)
-               // .onlyShowFolder()  //只显示文件夹
+                // .onlyShowFolder()  //只显示文件夹
                 //.onlySelectFolder()  //只能选择文件夹
-               // .isSingle() // 只能选择一个
+                // .isSingle() // 只能选择一个
                 .setMaxCount(5) //设置最大选择数
-                .setFileTypes("png","jpg", "doc","apk", "mp3", "gif", "txt", "mp4", "zip") //设置文件类型
+                .setFileTypes("png", "jpg", "doc", "apk", "mp3", "gif", "txt", "mp4", "zip") //设置文件类型
                 .setSortType(FileSelector.BY_NAME_ASC) //设置名字排序
                 //.setSortType(FileSelector.BY_TIME_ASC) //设置时间排序
                 //.setSortType(FileSelector.BY_SIZE_DESC) //设置大小排序
@@ -139,45 +145,51 @@ public class MainActivity extends AppCompatActivity {
                 .start();
     }
 
-    public void openOnlyFolder( ) {
+    public void openOnlyFolder() {
         FileSelector.from(this)
                 .onlySelectFolder()  //只能选择文件夹
                 .requestCode(1) //设置返回码
                 .start();
     }
-    public void openOnlyShowFolder( ) {
+
+    public void openOnlyShowFolder() {
         FileSelector.from(this)
                 .onlyShowFolder()  //只能选择文件夹
                 .requestCode(1) //设置返回码
                 .start();
     }
-    public void openOnlymp3( ) {
+
+    public void openOnlymp3() {
         FileSelector.from(this)
                 .setMaxCount(5) //设置最大选择数
-                .setFileTypes( "mp4") //设置文件类型
+                .setFileTypes("mp4") //设置文件类型
                 .requestCode(1) //设置返回码
                 .start();
     }
-    public void openOnlyIMG( ) {
+
+    public void openOnlyIMG() {
         FileSelector.from(this)
                 .setMaxCount(5) //设置最大选择数
-                .setFileTypes( "png","jpg") //设置文件类型
+                .setFileTypes("png", "jpg") //设置文件类型
                 .requestCode(1) //设置返回码
                 .start();
     }
+
+
+
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            if (requestCode == 1) {
-                ArrayList<String> essFileList = data.getStringArrayListExtra(Const.EXTRA_RESULT_SELECTION);
-                StringBuilder builder = new StringBuilder();
-                for (String file :
-                        essFileList) {
-                    builder.append(file).append("\n");
-                }
-                tv_backResult.setText(builder.toString());
+        if (requestCode == 1) {
+            ArrayList<String> essFileList = data.getStringArrayListExtra(Const.EXTRA_RESULT_SELECTION);
+            StringBuilder builder = new StringBuilder();
+            for (String file :
+                    essFileList) {
+                builder.append(file).append("\n");
             }
+            tv_backResult.setText(builder.toString());
         }
     }
+
+
 }
