@@ -32,7 +32,7 @@ allprojects {
 ```
 
 ```
-implementation 'com.github.ZLYang110:FileSelector:2.0.0'
+implementation 'com.github.ZLYang110:FileSelector:2.1.0'
 ```
 
 
@@ -126,6 +126,11 @@ onlyShowFolder | 是否仅只显示文件夹  | false
 onlySelectFolder | 是否只选择文件夹  | false
 
 # 更新日志
+
+2.1.0
+----
+  -  添加Fragment 测试
+
 
 2.0.0
 ----
