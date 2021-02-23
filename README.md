@@ -32,7 +32,11 @@ allprojects {
 ```
 
 ```
+//AndroidX
 implementation 'com.github.ZLYang110:FileSelector:2.1.0'
+
+ //support
+//implementation 'com.github.ZLYang110:FileSelector:1.0.2'
 ```
 
 
