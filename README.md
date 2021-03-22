@@ -13,6 +13,7 @@
 ---
 <img src="https://github.com/ZLYang110/FileSelector/blob/master/screenshot/Screenshot_20200622_135034.jpg" width = "180" height = "320" alt="图片名称"/>     <img src="https://github.com/ZLYang110/FileSelector/blob/master/screenshot/Screenshot_20200622_135013.jpg" width = "180" height = "320" alt="图片名称"/>
 <img src="https://github.com/ZLYang110/FileSelector/blob/master/screenshot/Screenshot_20200622_135143.jpg" width = "180" height = "320" alt="图片名称"/>     <img src="https://github.com/ZLYang110/FileSelector/blob/master/screenshot/Screenshot_20200622_135702.jpg" width = "180" height = "320" alt="图片名称"/>
+<img src="https://github.com/ZLYang110/FileSelector/blob/master/screenshot/Screenshot_20210322_154231.jpg" width = "180" height = "320" alt="图片名称"/>
 ---
 
 ### 可下载APK直接体验
@@ -83,7 +84,7 @@ implementation 'com.github.ZLYang110:FileSelector:2.1.1'
                 .start();
 ```
 
-##### 三、 只显示图片的文件
+##### 四、 只显示图片的文件
 
 ```
  FileSelector.from(this)
@@ -94,7 +95,7 @@ implementation 'com.github.ZLYang110:FileSelector:2.1.1'
 ```
 
 
-##### 四、 自定义标题颜色
+##### 五、 自定义标题颜色
 
 ```
   FileSelector.from(this)
@@ -109,7 +110,7 @@ implementation 'com.github.ZLYang110:FileSelector:2.1.1'
                  .start();
 ```
 
-##### 五、 接收返回的文件数据，在 ++onActivityResult++ 方法中获取。选中文件以链表方式返回， ++EssFile++ 类为载体
+##### 六、 接收返回的文件数据，在 ++onActivityResult++ 方法中获取。选中文件以链表方式返回， ++EssFile++ 类为载体
 
 
 ```
