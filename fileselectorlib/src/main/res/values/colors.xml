@@ -13,4 +13,6 @@
     <color name="Grey800">#3D3D3D</color>
     <color name="Grey900">#212121</color>
     <color name="black">#000000</color>
+
+    <color name="titlebg">#6200EE</color>
 </resources>

@@ -68,7 +68,22 @@ public final class SelectCreator {
         selectOptions.setOnlySelectFolder(true);
         return this;
     }
-
+    public SelectCreator setTilteBg(int color) {
+        selectOptions.setTitleBg(color);
+        return this;
+    }
+    public SelectCreator setTitleColor(int color) {
+        selectOptions.setTitleColor(color);
+        return this;
+    }
+    public SelectCreator setTitleLiftColor(int color) {
+        selectOptions.setTitleLiftColor(color);
+        return this;
+    }
+    public SelectCreator setTitleRightColor(int color) {
+        selectOptions.setTitleRightColor(color);
+        return this;
+    }
    /* public SelectCreator onlyShowImages() {
         selectOptions.onlyShowImages = true;
         return this;

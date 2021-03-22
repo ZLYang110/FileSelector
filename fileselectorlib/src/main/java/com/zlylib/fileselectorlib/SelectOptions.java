@@ -29,6 +29,11 @@ public class SelectOptions {
     public int request_code;//返回码
     public String targetPath = defaultTargetPath;
 
+    private int titleBg = 0;//标题背景颜色
+    private int titleColor = 0;//标题文字颜色
+    private int titleLiftColor = 0;//标题左边颜色
+    private int titleRightColor = 0;//标题右边颜色
+
 
     public String[] getFileTypes() {
         if (mFileTypes == null || mFileTypes.length == 0) {
@@ -43,9 +48,11 @@ public class SelectOptions {
         }
         return Integer.valueOf(mSortType);
     }
+
     public void setSortType(int sortType) {
         mSortType = String.valueOf(sortType);
     }
+
     public String getTargetPath() {
         if (!new File(targetPath).exists()) {
             File file = new File(defaultTargetPath);
@@ -73,7 +80,37 @@ public class SelectOptions {
         this.onlySelectFolder = onlySelectFolder;
     }
 
+    public int getTitleBg() {
+        return titleBg;
+    }
 
+    public void setTitleBg(int titleBg) {
+        this.titleBg = titleBg;
+    }
+
+    public int getTitleColor() {
+        return titleColor;
+    }
+
+    public void setTitleColor(int titleColor) {
+        this.titleColor = titleColor;
+    }
+
+    public int getTitleLiftColor() {
+        return titleLiftColor;
+    }
+
+    public void setTitleLiftColor(int titleLiftColor) {
+        this.titleLiftColor = titleLiftColor;
+    }
+
+    public int getTitleRightColor() {
+        return titleRightColor;
+    }
+
+    public void setTitleRightColor(int titleRightColor) {
+        this.titleRightColor = titleRightColor;
+    }
 
     public static SelectOptions getInstance() {
         return InstanceHolder.INSTANCE;
@@ -93,6 +130,11 @@ public class SelectOptions {
         onlyShowFolder = false;
         onlySelectFolder = false;
         targetPath = defaultTargetPath;
+        titleBg = 0;//标题背景颜色
+        titleColor = 0;//标题文字颜色
+        titleLiftColor = 0;//标题左边颜色
+        titleRightColor = 0;//标题右边颜色
+
     }
 
     private static final class InstanceHolder {

@@ -1,5 +1,6 @@
 package com.zlylib.fileselectorlib.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -78,8 +79,21 @@ public class FileSelectorActivity extends AppCompatActivity implements OnItemCli
         initUi();
         initData();
     }
+    @SuppressLint("ResourceAsColor")
     private void initUi() {
         abc= findViewById(R.id.abc);
+        if(SelectOptions.getInstance().getTitleBg()!=0){
+            abc.setBackgroundColor(getResources().getColor(SelectOptions.getInstance().getTitleBg()));
+        }
+        if(SelectOptions.getInstance().getTitleColor()!=0){
+            abc.getTitleTextView().setTextColor(getResources().getColor(SelectOptions.getInstance().getTitleColor()));
+        }
+        if(SelectOptions.getInstance().getTitleLiftColor()!=0){
+            abc.getLeftIconView().setColorFilter(getResources().getColor(SelectOptions.getInstance().getTitleLiftColor()));
+        }
+        if(SelectOptions.getInstance().getTitleRightColor()!=0){
+            abc.getRightTextView().setTextColor(getResources().getColor(SelectOptions.getInstance().getTitleRightColor()));
+        }
         abc.setOnLeftIconClickListener(new OnActionBarChildClickListener() {
             @Override
             public void onClick(View v) {

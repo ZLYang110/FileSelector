@@ -24,7 +24,7 @@ import java.util.List;
 public class OneFragment extends Fragment {
 
     View view;
-    private TextView tv_fragment,tv_open, tv_showFolder, tv_onlyFolder, tv_onlyMP4, tv_onlyIMG, tv_backResult;
+    private TextView tv_fragment,tv_open, tv_showFolder, tv_onlyFolder, tv_onlyMP4, tv_onlyIMG,tv_openColor, tv_backResult;
 
     @Nullable
     @Override
@@ -43,6 +43,7 @@ public class OneFragment extends Fragment {
         tv_onlyFolder = view.findViewById(R.id.tv_onlyFolder);
         tv_onlyMP4 = view.findViewById(R.id.tv_onlyMP4);
         tv_onlyIMG = view.findViewById(R.id.tv_onlyIMG);
+        tv_openColor = view.findViewById(R.id.tv_openColor);
         tv_fragment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,6 +80,12 @@ public class OneFragment extends Fragment {
                 downPermission(5);
             }
         });
+        tv_openColor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                downPermission(6);
+            }
+        });
     }
 
     private void downPermission(final int i) {
@@ -97,6 +104,9 @@ public class OneFragment extends Fragment {
                     openOnlymp3();
                 } else if (i == 5) {
                     openOnlyIMG();
+                }else if(i == 6){
+                    openOustomizeTitle();
+
                 }
 
             }
@@ -174,20 +184,33 @@ public class OneFragment extends Fragment {
                 .requestCode(1) //设置返回码
                 .start();
     }
-
+    public void openOustomizeTitle( ) {
+        FileSelector.from(this)
+                .setTilteBg(R.color.titleBg) //不填写默认是： ?attr/colorPrimary
+                .setTitleColor(R.color.themeRed)//不填写默认白色
+                .setTitleLiftColor(R.color.text_accent)//不填写默认白色
+                .setTitleRightColor(R.color.face_text)//不填写默认白色
+                .setMaxCount(5) //设置最大选择数
+                .setFileTypes("png","jpg", "doc","apk", "mp3", "gif", "txt", "mp4", "zip") //设置文件类型
+                .setSortType(FileSelector.BY_NAME_ASC) //设置名字排序
+                .requestCode(1) //设置返回码
+                .start();
+    }
 
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1) {
-            ArrayList<String> essFileList = data.getStringArrayListExtra(Const.EXTRA_RESULT_SELECTION);
-            StringBuilder builder = new StringBuilder();
-            for (String file :
-                    essFileList) {
-                builder.append(file).append("\n");
+            if(data!=null){
+                ArrayList<String> essFileList = data.getStringArrayListExtra(Const.EXTRA_RESULT_SELECTION);
+                StringBuilder builder = new StringBuilder();
+                for (String file :
+                        essFileList) {
+                    builder.append(file).append("\n");
+                }
+                tv_backResult.setText(builder.toString());
             }
-            tv_backResult.setText(builder.toString());
         }
     }
 

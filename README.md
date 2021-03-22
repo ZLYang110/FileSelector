@@ -5,7 +5,8 @@
 2. 可通过扫描全盘的方式，选择指定后缀名的文件
 3. 支持多选。
 4. 支持Activity、Fragment
-4. 支持androidX
+5. 支持androidX
+6. 自定义标题颜色
 
 ### Example
 
@@ -33,7 +34,7 @@ allprojects {
 
 ```
 //AndroidX
-implementation 'com.github.ZLYang110:FileSelector:2.1.0'
+implementation 'com.github.ZLYang110:FileSelector:2.1.1'
 
  //support
 //implementation 'com.github.ZLYang110:FileSelector:1.0.2'
@@ -92,24 +93,40 @@ implementation 'com.github.ZLYang110:FileSelector:2.1.0'
                 .start();
 ```
 
-##### 四、 接收返回的文件数据，在 ++onActivityResult++ 方法中获取。选中文件以链表方式返回， ++EssFile++ 类为载体
+
+##### 四、 自定义标题颜色
+
+```
+  FileSelector.from(this)
+                 .setTilteBg(R.color.titleBg) //不填写默认是： ?attr/colorPrimary
+                 .setTitleColor(R.color.themeRed)//不填写默认白色
+                 .setTitleLiftColor(R.color.text_accent)//不填写默认白色
+                 .setTitleRightColor(R.color.face_text)//不填写默认白色
+                 .setMaxCount(5) //设置最大选择数
+                 .setFileTypes("png","jpg", "doc","apk", "mp3", "gif", "txt", "mp4", "zip") //设置文件类型
+                 .setSortType(FileSelector.BY_NAME_ASC) //设置名字排序
+                 .requestCode(1) //设置返回码
+                 .start();
+```
+
+##### 五、 接收返回的文件数据，在 ++onActivityResult++ 方法中获取。选中文件以链表方式返回， ++EssFile++ 类为载体
 
 
 ```
-@Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+  @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-       if (resultCode == RESULT_OK) {
-                   if (requestCode == 1) {
-                       ArrayList<String> essFileList = data.getStringArrayListExtra(Const.EXTRA_RESULT_SELECTION);
-                       StringBuilder builder = new StringBuilder();
-                       for (String file :
-                               essFileList) {
-                           builder.append(file).append("\n");
-                       }
-                       tv_backResult.setText(builder.toString());
-                   }
-               }
+        if (requestCode == 1) {
+            if(data!=null){
+                ArrayList<String> essFileList = data.getStringArrayListExtra(Const.EXTRA_RESULT_SELECTION);
+                StringBuilder builder = new StringBuilder();
+                for (String file :
+                        essFileList) {
+                    builder.append(file).append("\n");
+                }
+                tv_backResult.setText(builder.toString());
+            }
+        }
     }
 ```
 
@@ -128,8 +145,17 @@ maxCount | 最大可选中数量 | 10
 request_code | 请求码 | 无
 onlyShowFolder | 是否仅只显示文件夹  | false
 onlySelectFolder | 是否只选择文件夹  | false
+setTilteBg | 设置标题背景颜色  | ?attr/colorPrimary
+setTitleColor | 设置标题颜色  | 白色
+setTitleLiftColor | 设置标题左边箭头颜色  | 白色
+setTitleRightColor | 设置标题右边字体颜色  | 白色
 
 # 更新日志
+
+2.1.1
+----
+  -  添加自定义标题
+
 
 2.1.0
 ----
