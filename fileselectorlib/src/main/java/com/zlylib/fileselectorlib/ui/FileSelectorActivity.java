@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +34,7 @@ import com.zlylib.fileselectorlib.core.EssFileCountTask;
 import com.zlylib.fileselectorlib.core.EssFileListTask;
 import com.zlylib.fileselectorlib.utils.Const;
 import com.zlylib.fileselectorlib.utils.FileUtils;
+import com.zlylib.fileselectorlib.utils.LogUtils;
 import com.zlylib.titlebarlib.ActionBarCommon;
 import com.zlylib.titlebarlib.OnActionBarChildClickListener;
 

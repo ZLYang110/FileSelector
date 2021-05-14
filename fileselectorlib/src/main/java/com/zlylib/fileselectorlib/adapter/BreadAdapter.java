@@ -22,6 +22,7 @@ public class BreadAdapter extends BaseQuickAdapter<BreadModel, BaseViewHolder> {
 
     public BreadAdapter(@Nullable List<BreadModel> data) {
         super(R.layout.bread_item,data);
+        addChildClickViewIds(R.id.btn_bread);
     }
 
     @Override
