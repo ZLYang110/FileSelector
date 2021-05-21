@@ -8,8 +8,10 @@ import android.webkit.MimeTypeMap;
 
 
 import androidx.annotation.IntDef;
+import androidx.documentfile.provider.DocumentFile;
 
 import com.zlylib.fileselectorlib.bean.BreadModel;
+import com.zlylib.fileselectorlib.bean.EssFile;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -139,18 +141,19 @@ public final class FileUtils {
 
     /**
      * 切换SD卡路径
+     *
      * @param sdCardName
      * @param mSdCardList
      * @return
      */
-    public static String getChangeSdCard(String sdCardName, List<String> mSdCardList){
-        if(TextUtils.isEmpty(sdCardName)){
+    public static String getChangeSdCard(String sdCardName, List<String> mSdCardList) {
+        if (TextUtils.isEmpty(sdCardName)) {
             return Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator;
         }
-        if(sdCardName.startsWith("内部存储设备")){
+        if (sdCardName.startsWith("内部存储设备")) {
             return mSdCardList.get(0) + File.separator;
         }
-        if(sdCardName.startsWith("SD卡")){
+        if (sdCardName.startsWith("SD卡")) {
             return mSdCardList.get(Integer.valueOf(String.valueOf(sdCardName.charAt(3)))) + File.separator;
         }
         return Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator;
@@ -181,172 +184,6 @@ public final class FileUtils {
         }
     }
 
-    /**
-     * 列出指定目录下的所有子目录
-     */
-    public static File[] listDirs(String startDirPath, String[] excludeDirs, @SortType int sortType) {
-        ArrayList<File> dirList = new ArrayList<File>();
-        File startDir = new File(startDirPath);
-        if (!startDir.isDirectory()) {
-            return new File[0];
-        }
-        File[] dirs = startDir.listFiles(new FileFilter() {
-            public boolean accept(File f) {
-                if (f == null) {
-                    return false;
-                }
-                //noinspection RedundantIfStatement
-                if (f.isDirectory()) {
-                    return true;
-                }
-                return false;
-            }
-        });
-        if (dirs == null) {
-            return new File[0];
-        }
-        if (excludeDirs == null) {
-            excludeDirs = new String[0];
-        }
-        for (File dir : dirs) {
-            File file = dir.getAbsoluteFile();
-            if (!ConvertUtils.toString(excludeDirs).contains(file.getName())) {
-                dirList.add(file);
-            }
-        }
-        if (sortType == BY_NAME_ASC) {
-            Collections.sort(dirList, new SortByName());
-        } else if (sortType == BY_NAME_DESC) {
-            Collections.sort(dirList, new SortByName());
-            Collections.reverse(dirList);
-        } else if (sortType == BY_TIME_ASC) {
-            Collections.sort(dirList, new SortByTime());
-        } else if (sortType == BY_TIME_DESC) {
-            Collections.sort(dirList, new SortByTime());
-            Collections.reverse(dirList);
-        } else if (sortType == BY_SIZE_ASC) {
-            Collections.sort(dirList, new SortBySize());
-        } else if (sortType == BY_SIZE_DESC) {
-            Collections.sort(dirList, new SortBySize());
-            Collections.reverse(dirList);
-        } else if (sortType == BY_EXTENSION_ASC) {
-            Collections.sort(dirList, new SortByExtension());
-        } else if (sortType == BY_EXTENSION_DESC) {
-            Collections.sort(dirList, new SortByExtension());
-            Collections.reverse(dirList);
-        }
-        return dirList.toArray(new File[dirList.size()]);
-    }
-
-    /**
-     * 列出指定目录下的所有子目录
-     */
-    public static File[] listDirs(String startDirPath, String[] excludeDirs) {
-        return listDirs(startDirPath, excludeDirs, BY_NAME_ASC);
-    }
-
-    /**
-     * 列出指定目录下的所有子目录
-     */
-    public static File[] listDirs(String startDirPath) {
-        return listDirs(startDirPath, null, BY_NAME_ASC);
-    }
-
-    /**
-     * 列出指定目录下的所有子目录及所有文件
-     */
-    public static File[] listDirsAndFiles(String startDirPath, String[] allowExtensions) {
-        File[] dirs, files, dirsAndFiles;
-        dirs = listDirs(startDirPath);
-        if (allowExtensions == null) {
-            files = listFiles(startDirPath);
-        } else {
-            files = listFiles(startDirPath, allowExtensions);
-        }
-        if (dirs == null || files == null) {
-            return null;
-        }
-        dirsAndFiles = new File[dirs.length + files.length];
-        System.arraycopy(dirs, 0, dirsAndFiles, 0, dirs.length);
-        System.arraycopy(files, 0, dirsAndFiles, dirs.length, files.length);
-        return dirsAndFiles;
-    }
-
-    /**
-     * 列出指定目录下的所有子目录及所有文件
-     */
-    public static File[] listDirsAndFiles(String startDirPath) {
-        return listDirsAndFiles(startDirPath, null);
-    }
-
-    /**
-     * 列出指定目录下的所有文件
-     */
-    public static File[] listFiles(String startDirPath, final Pattern filterPattern, @SortType int sortType) {
-        LogUtils.verbose(String.format("list file %s", startDirPath));
-        ArrayList<File> fileList = new ArrayList<File>();
-        File f = new File(startDirPath);
-        if (!f.isDirectory()) {
-            return new File[0];
-        }
-        File[] files = f.listFiles(new FileFilter() {
-            public boolean accept(File f) {
-                if (f == null) {
-                    return false;
-                }
-                if (f.isDirectory()) {
-                    return false;
-                }
-                //noinspection SimplifiableIfStatement
-                if (filterPattern == null) {
-                    return true;
-                }
-                return filterPattern.matcher(f.getName()).find();
-            }
-        });
-        if (files == null) {
-            return new File[0];
-        }
-        for (File file : files) {
-            fileList.add(file.getAbsoluteFile());
-        }
-        if (sortType == BY_NAME_ASC) {
-            Collections.sort(fileList, new SortByName());
-        } else if (sortType == BY_NAME_DESC) {
-            Collections.sort(fileList, new SortByName());
-            Collections.reverse(fileList);
-        } else if (sortType == BY_TIME_ASC) {
-            Collections.sort(fileList, new SortByTime());
-        } else if (sortType == BY_TIME_DESC) {
-            Collections.sort(fileList, new SortByTime());
-            Collections.reverse(fileList);
-        } else if (sortType == BY_SIZE_ASC) {
-            Collections.sort(fileList, new SortBySize());
-        } else if (sortType == BY_SIZE_DESC) {
-            Collections.sort(fileList, new SortBySize());
-            Collections.reverse(fileList);
-        } else if (sortType == BY_EXTENSION_ASC) {
-            Collections.sort(fileList, new SortByExtension());
-        } else if (sortType == BY_EXTENSION_DESC) {
-            Collections.sort(fileList, new SortByExtension());
-            Collections.reverse(fileList);
-        }
-        return fileList.toArray(new File[fileList.size()]);
-    }
-
-    /**
-     * 列出指定目录下的所有文件
-     */
-    public static File[] listFiles(String startDirPath, Pattern filterPattern) {
-        return listFiles(startDirPath, filterPattern, BY_NAME_ASC);
-    }
-
-    /**
-     * 列出指定目录下的所有文件
-     */
-    public static File[] listFiles(String startDirPath) {
-        return listFiles(startDirPath, null, BY_NAME_ASC);
-    }
 
     /**
      * 列出指定目录下的所有文件
@@ -366,12 +203,6 @@ public final class FileUtils {
         });
     }
 
-    /**
-     * 列出指定目录下的所有文件
-     */
-    public static File[] listFiles(String startDirPath, String allowExtension) {
-        return listFiles(startDirPath, new String[]{allowExtension});
-    }
 
     /**
      * 判断文件或目录是否存在
@@ -774,13 +605,13 @@ public final class FileUtils {
         return file.mkdirs();
     }
 
-    public static class SortByExtension implements Comparator<File> {
+    public static class SortByExtension implements Comparator<EssFile> {
 
         public SortByExtension() {
             super();
         }
 
-        public int compare(File f1, File f2) {
+        public int compare(EssFile f1, EssFile f2) {
             if (f1 == null || f2 == null) {
                 if (f1 == null) {
                     return -1;
@@ -800,7 +631,7 @@ public final class FileUtils {
 
     }
 
-    public static class SortByName implements Comparator<File> {
+    public static class SortByName implements Comparator<EssFile> {
         private boolean caseSensitive;
 
         public SortByName(boolean caseSensitive) {
@@ -811,7 +642,7 @@ public final class FileUtils {
             this.caseSensitive = false;
         }
 
-        public int compare(File f1, File f2) {
+        public int compare(EssFile f1, EssFile f2) {
             if (f1 == null || f2 == null) {
                 if (f1 == null) {
                     return -1;
@@ -837,13 +668,13 @@ public final class FileUtils {
 
     }
 
-    public static class SortBySize implements Comparator<File> {
+    public static class SortBySize implements Comparator<EssFile> {
 
         public SortBySize() {
             super();
         }
 
-        public int compare(File f1, File f2) {
+        public int compare(EssFile f1, EssFile f2) {
             if (f1 == null || f2 == null) {
                 if (f1 == null) {
                     return -1;
@@ -867,13 +698,13 @@ public final class FileUtils {
 
     }
 
-    public static class SortByTime implements Comparator<File> {
+    public static class SortByTime implements Comparator<EssFile> {
 
         public SortByTime() {
             super();
         }
 
-        public int compare(File f1, File f2) {
+        public int compare(EssFile f1, EssFile f2) {
             if (f1 == null || f2 == null) {
                 if (f1 == null) {
                     return -1;
@@ -925,6 +756,7 @@ public final class FileUtils {
 
     /**
      * 获取用于显示的Sd卡列表
+     *
      * @param sdCardList sdCardList
      * @return List
      */
@@ -935,7 +767,7 @@ public final class FileUtils {
                 //内部存储设备
                 resultList.add("内部存储设备");
             } else {
-                resultList.add("SD卡"+i);
+                resultList.add("SD卡" + i);
             }
         }
         return resultList;

@@ -15,23 +15,20 @@ import com.zlylib.mypermissionlib.RuntimeRequester;
  * @author zhangliyang
  * dec  在申请多个权限时，本框架采用排队方式申请，即先申请第一个权限，第一个申请成功后再进行下一个的申请流程，第一个失败则为本次申请失败。
  * GitHub: https://github.com/ZLYang110
- *
  */
 public class PermissionUtils {
 
 
-
     public static final class PermissionGroup {
         public static final String[] PERMISSIONS_STORAGE = {
-                Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
         };
 
 
     }
 
 
-    public static RuntimeRequester request(RequestListener listener, Context context , String[] permissions) {
+    public static RuntimeRequester request(RequestListener listener, Context context, String[] permissions) {
         return MyPermission.with(context)
                 .runtime(1)
                 .permissions(permissions)

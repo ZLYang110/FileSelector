@@ -1,6 +1,5 @@
 package com.zlylib.fileselectorlib;
 
-import android.graphics.drawable.Drawable;
 import android.os.Environment;
 import android.text.TextUtils;
 
@@ -24,6 +23,7 @@ public class SelectOptions {
     public int maxCount = 10;//最多选的个数
     private boolean onlyShowFolder = false;//只显示文件夹
     private boolean onlySelectFolder = false;//只选择文件夹
+    private boolean showChildCount = false;
     //public boolean onlyShowImages = false;//只显示图片
     //public boolean onlyShowVideos = false;//只显示视频
     public int request_code;//返回码
@@ -70,6 +70,14 @@ public class SelectOptions {
 
     public void setOnlyShowFolder(boolean onlyShowFolder) {
         this.onlyShowFolder = onlyShowFolder;
+    }
+
+    public boolean isShowChildCount() {
+        return showChildCount;
+    }
+
+    public void setShowChildCount(boolean showChildCount) {
+        this.showChildCount = showChildCount;
     }
 
     public boolean isOnlySelectFolder() {
