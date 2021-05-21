@@ -1,19 +1,15 @@
 package com.zlyandroid.fileselector;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.FileProvider;
-import androidx.documentfile.provider.DocumentFile;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.documentfile.provider.DocumentFile;
 
 import com.zlylib.fileselectorlib.FileSelector;
-import com.zlylib.fileselectorlib.bean.EssFile;
 import com.zlylib.fileselectorlib.utils.Const;
 import com.zlylib.fileselectorlib.utils.DataTool;
 import com.zlylib.mypermissionlib.RequestListener;
@@ -145,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
                 //.onlySelectFolder()  //只能选择文件夹
                 // .isSingle() // 只能选择一个
                 .setMaxCount(5) //设置最大选择数
-                .setFileTypes("", "png", "jpg", "doc", "apk", "mp3", "gif", "txt", "mp4", "zip") //设置文件类型
+                .setFileTypes("png", "jpg", "doc", "apk", "mp3", "gif", "txt", "mp4", "zip") //设置文件类型
                 .setSortType(FileSelector.BY_NAME_ASC) //设置名字排序
                 //.setSortType(FileSelector.BY_TIME_ASC) //设置时间排序
                 //.setSortType(FileSelector.BY_SIZE_DESC) //设置大小排序
