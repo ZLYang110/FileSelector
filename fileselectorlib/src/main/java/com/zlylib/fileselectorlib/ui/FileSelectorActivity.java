@@ -155,6 +155,8 @@ public class FileSelectorActivity extends AppCompatActivity implements OnItemCli
         mBreadAdapter.onAttachedToRecyclerView(mBreadRecyclerView);
         mBreadAdapter.setOnItemChildClickListener(this);
 
+        mCurFolder = SelectOptions.getInstance().getTargetPath(this);
+
     }
 
     private void initData() {

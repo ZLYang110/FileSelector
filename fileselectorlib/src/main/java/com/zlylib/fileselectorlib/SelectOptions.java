@@ -1,8 +1,10 @@
 package com.zlylib.fileselectorlib;
 
+import android.content.Context;
 import android.os.Environment;
 import android.text.TextUtils;
 
+import com.zlylib.fileselectorlib.utils.DataTool;
 import com.zlylib.fileselectorlib.utils.FileUtils;
 
 import java.io.File;
@@ -53,15 +55,18 @@ public class SelectOptions {
         mSortType = String.valueOf(sortType);
     }
 
-    public String getTargetPath() {
-        if (!new File(targetPath).exists()) {
-            File file = new File(defaultTargetPath);
-            if (!file.exists()) {
-                file.mkdirs();
-            }
-            return defaultTargetPath;
+    public String getTargetPath(Context context) {
+        if (new File(targetPath).exists()) {
+            return targetPath;
+        } else if (DataTool.isAndroidR()) {
+            if (DataTool.getDocumentFile(context, targetPath).exists()) return targetPath;
         }
-        return targetPath;
+        File file = new File(defaultTargetPath);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        return defaultTargetPath;
+
     }
 
     public boolean isOnlyShowFolder() {
