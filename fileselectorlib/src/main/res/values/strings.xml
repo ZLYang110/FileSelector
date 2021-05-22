@@ -3,4 +3,12 @@
     <string name="folder_desc" translatable="false">文件:%1$s&#160;&#160;|&#160;&#160;文件夹:%2$s</string>
     <string name="file_desc" translatable="false">%1$s&#160;&#160;|&#160;&#160;%2$s</string>
     <string name="selected_file_count" translatable="false">选中(%1$s/%2$s)</string>
+    <string name="lastModified">yyyy年MM月dd日</string>
+
+    <string name="android_r_data_request">因安卓11默认拒绝访问data目录，需要获取data目录权限才能读取文件，请授予该权限</string>
+    <string name="r_data_tip">请点击底部的<b>使用此文件夹</b></string>
+    <string name="tip">提示</string>
+    <string name="ok">确定</string>
+    <string name="cancel">取消</string>
+
 </resources>

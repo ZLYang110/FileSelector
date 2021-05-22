@@ -1,8 +1,8 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.3"
+    compileSdkVersion 30
+    buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "com.zlyandroid.fileselector"
@@ -26,11 +26,12 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     //权限申请
     implementation 'com.github.ZLYang110:MyPermission:1.0'
-    // implementation project(':fileselectorlib')
-    implementation 'com.github.ZLYang110:FileSelector:2.1.2'
+    implementation project(':fileselectorlib')
+    //implementation 'com.github.ZLYang110:FileSelector:2.1.2'
     implementation 'com.github.ZLYang110:UpperDialog:1.4.1'
+    implementation 'androidx.documentfile:documentfile:1.0.1'
 }

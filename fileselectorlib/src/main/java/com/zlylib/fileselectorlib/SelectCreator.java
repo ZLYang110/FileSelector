@@ -2,7 +2,6 @@ package com.zlylib.fileselectorlib;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -16,10 +15,10 @@ import com.zlylib.fileselectorlib.ui.FileSelectorActivity;
 
 public final class SelectCreator {
 
-    private  FileSelector filePicker;
-    private  SelectOptions selectOptions;
+    private FileSelector filePicker;
+    private SelectOptions selectOptions;
 
-    public SelectCreator(FileSelector filePicker ) {
+    public SelectCreator(FileSelector filePicker) {
         selectOptions = SelectOptions.getCleanInstance();
         this.filePicker = filePicker;
     }
@@ -36,11 +35,10 @@ public final class SelectCreator {
     }
 
 
-    public SelectCreator setTargetPath(String path){
+    public SelectCreator setTargetPath(String path) {
         selectOptions.targetPath = path;
         return this;
     }
-
 
 
     public SelectCreator setFileTypes(String... fileTypes) {
@@ -59,27 +57,37 @@ public final class SelectCreator {
         return this;
     }
 
+    public SelectCreator setShowChildCount(boolean show) {
+        selectOptions.setShowChildCount(show);
+        return this;
+    }
+
     public SelectCreator onlyShowFolder() {
         selectOptions.setOnlyShowFolder(true);
         selectOptions.setOnlySelectFolder(true);
         return this;
     }
+
     public SelectCreator onlySelectFolder() {
         selectOptions.setOnlySelectFolder(true);
         return this;
     }
+
     public SelectCreator setTilteBg(int color) {
         selectOptions.setTitleBg(color);
         return this;
     }
+
     public SelectCreator setTitleColor(int color) {
         selectOptions.setTitleColor(color);
         return this;
     }
+
     public SelectCreator setTitleLiftColor(int color) {
         selectOptions.setTitleLiftColor(color);
         return this;
     }
+
     public SelectCreator setTitleRightColor(int color) {
         selectOptions.setTitleRightColor(color);
         return this;
@@ -111,7 +119,7 @@ public final class SelectCreator {
         if (fragment != null) {
             fragment.startActivityForResult(intent, selectOptions.request_code);
         } else {
-            ((AppCompatActivity)activity).startActivityForResult(intent, selectOptions.request_code);
+            ((AppCompatActivity) activity).startActivityForResult(intent, selectOptions.request_code);
         }
     }
 

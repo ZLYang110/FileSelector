@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coordinator_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:orientation="vertical">
 
     <com.zlylib.titlebarlib.ActionBarCommon
@@ -13,14 +14,16 @@
         app:ab_immersion="immersed"
         app:ab_statusBarVisible="auto"
         app:abc_leftIconRes="@drawable/ic_back"
+        app:abc_rightText="选择"
         app:abc_rightTextPaddingLeft="0dp"
         app:abc_rightTextPaddingRight="15dp"
-        app:abc_rightText="选择"
         app:abc_titleText="文件选择" />
+
     <LinearLayout
+        android:id="@+id/path"
         android:layout_width="match_parent"
         android:layout_height="33dp"
-        android:background="@color/Grey200"
+        android:layout_below="@id/abc"
         android:orientation="horizontal">
 
         <ImageView
@@ -42,12 +45,24 @@
             android:paddingRight="10dp" />
     </LinearLayout>
 
+    <View
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_below="@id/path"
+        android:background="@color/Grey200" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcv_file_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/line"
         android:scrollbars="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-</LinearLayout>
+    <ProgressBar
+        android:id="@+id/pgb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
+</RelativeLayout>

@@ -7,6 +7,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 
+import androidx.documentfile.provider.DocumentFile;
+
+import com.zlylib.fileselectorlib.utils.DataTool;
 import com.zlylib.fileselectorlib.utils.FileUtils;
 import com.zlylib.fileselectorlib.utils.MimeType;
 import com.zlylib.fileselectorlib.utils.PathUtils;
@@ -35,6 +38,8 @@ public class EssFile implements Parcelable {
     private boolean isDirectory = false;
     private boolean isFile = false;
     private String mFileName;
+    private long lastModified;
+    private long length;
     private Uri uri;
 
     private int itemType = MEDIA;
@@ -51,6 +56,8 @@ public class EssFile implements Parcelable {
         mFileName = in.readString();
         uri = in.readParcelable(Uri.class.getClassLoader());
         itemType = in.readInt();
+        lastModified = in.readLong();
+        length = in.readLong();
     }
 
     public static final Creator<EssFile> CREATOR = new Creator<EssFile>() {
@@ -77,10 +84,12 @@ public class EssFile implements Parcelable {
         mFilePath = path;
         File file = new File(mFilePath);
         if (file.exists()) {
+            lastModified = file.lastModified();
             isExits = true;
             isDirectory = file.isDirectory();
             isFile = file.isFile();
             mFileName = file.getName();
+            length = file.length();
         }
         mimeType = FileUtils.getMimeType(mFilePath);
     }
@@ -88,11 +97,32 @@ public class EssFile implements Parcelable {
     public EssFile(File file) {
         mFilePath = file.getAbsolutePath();
         if (file.exists()) {
+            lastModified = file.lastModified();
             isExits = true;
             isDirectory = file.isDirectory();
             isFile = file.isFile();
+            mFileName = file.getName();
+            length = file.length();
         }
         mimeType = FileUtils.getMimeType(file.getAbsolutePath());
+    }
+
+    public EssFile(DocumentFile file) {
+        this(file, file.isDirectory());
+    }
+
+    public EssFile(DocumentFile file, boolean isDirectory) {
+        uri = file.getUri();
+        mFilePath = DataTool.treeToPath(uri.toString());
+        if (file.exists()) {
+            isExits = true;
+            this.isDirectory = isDirectory;
+            this.isFile = !isDirectory;
+            lastModified = file.lastModified();
+            mFileName = file.getName();
+            length = file.length();
+        }
+        mimeType = FileUtils.getMimeType(mFilePath);
     }
 
     public EssFile(long id, String mimeType) {
@@ -151,8 +181,16 @@ public class EssFile implements Parcelable {
         return new File(mFilePath);
     }
 
+    public DocumentFile getDocumentFile(Context context) {
+        if (uri != null) {
+            return DocumentFile.fromTreeUri(context, uri);
+        } else {
+            return DataTool.getDocumentFile(context, mFilePath);
+        }
+    }
+
     public String getName() {
-        return new File(mFilePath).getName();
+        return mFileName;
     }
 
     public boolean isDirectory() {
@@ -163,19 +201,50 @@ public class EssFile implements Parcelable {
         return isFile;
     }
 
+    public long lastModified() {
+        return lastModified;
+    }
+
     public String getAbsolutePath() {
         return mFilePath;
     }
 
-    public static List<EssFile> getEssFileList(List<File> files,boolean isSelectFolder) {
+    public long length() {
+        return length;
+    }
+
+    public static List<EssFile> getEssFileList(List<File> files, boolean isSelectFolder) {
         List<EssFile> essFileList = new ArrayList<>();
-        for (File file :files) {
-            if(isSelectFolder){
-                if(isFolder(file)){//只添加文件夹
+        for (File file : files) {
+            if (isSelectFolder) {
+                if (isFolder(file)) {//只添加文件夹
                     essFileList.add(new EssFile(file));
                 }
-            }else{
+            } else {
                 essFileList.add(new EssFile(file));
+            }
+
+        }
+        return essFileList;
+    }
+
+    public static List<EssFile> getEssFileListDocument(List<DocumentFile> files,
+                                                       EssDocumentFilter filter,
+                                                       boolean isSelectFolder) {
+        List<EssFile> essFileList = new ArrayList<>();
+        for (DocumentFile file : files) {
+            if (isSelectFolder) {
+                if (isFolder(file)) {//只添加文件夹
+                    EssFile f = new EssFile(file, true);
+                    if (filter.accept(f)) {
+                        essFileList.add(f);
+                    }
+                }
+            } else {
+                EssFile f = new EssFile(file, isFolder(file));
+                if (filter.accept(f)) {
+                    essFileList.add(f);
+                }
             }
 
         }
@@ -192,9 +261,9 @@ public class EssFile implements Parcelable {
         return essFileArrayList;
     }
 
-    public static ArrayList<String> getFilePathList(ArrayList<EssFile> essFileArrayList){
+    public static ArrayList<String> getFilePathList(ArrayList<EssFile> essFileArrayList) {
         ArrayList<String> resultList = new ArrayList<>();
-        for (EssFile essFile:essFileArrayList) {
+        for (EssFile essFile : essFileArrayList) {
             resultList.add(essFile.getAbsolutePath());
         }
         return resultList;
@@ -209,9 +278,15 @@ public class EssFile implements Parcelable {
                 ", mFileName='" + mFileName + '\'' +
                 '}';
     }
+
     public static boolean isFolder(File file) {
-       return file.isDirectory();
+        return file.isDirectory();
     }
+
+    public static boolean isFolder(DocumentFile file) {
+        return file.isDirectory();
+    }
+
     public boolean isImage() {
         if (mimeType == null) return false;
         return mimeType.equals(MimeType.JPEG.toString())
@@ -265,6 +340,8 @@ public class EssFile implements Parcelable {
         dest.writeString(mFileName);
         dest.writeParcelable(uri, flags);
         dest.writeInt(itemType);
+        dest.writeLong(lastModified);
+        dest.writeLong(length);
     }
 
     @Override
