@@ -43,7 +43,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileSelectorActivity extends AppCompatActivity implements OnItemClickListener, OnItemChildClickListener,
-        View.OnClickListener,FileListAdapter.onLoadFileCountListener, EssFileListCallBack, EssFileCountCallBack {
+        View.OnClickListener, FileListAdapter.onLoadFileCountListener, EssFileListCallBack, EssFileCountCallBack {
 
     /*当前目录，默认是SD卡根目录*/
     private String mCurFolder = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator;
@@ -56,8 +56,8 @@ public class FileSelectorActivity extends AppCompatActivity implements OnItemCli
     private RecyclerView mBreadRecyclerView;
     private ImageView mImbSelectSdCard;
     /**
-    * 已选中的文件列表
-    * */
+     * 已选中的文件列表
+     */
     private ArrayList<EssFile> mSelectedFileList = new ArrayList<>();// 全部信息列表
     private ArrayList<String> mSelectedList = new ArrayList<>();//地址信息列表
     /*当前选中排序方式的位置*/
@@ -78,22 +78,24 @@ public class FileSelectorActivity extends AppCompatActivity implements OnItemCli
         if (!mSdCardList.isEmpty()) {
             mCurFolder = mSdCardList.get(0) + File.separator;
         }
+
         initUi();
         initData();
     }
+
     @SuppressLint("ResourceAsColor")
     private void initUi() {
-        abc= findViewById(R.id.abc);
-        if(SelectOptions.getInstance().getTitleBg()!=0){
+        abc = findViewById(R.id.abc);
+        if (SelectOptions.getInstance().getTitleBg() != 0) {
             abc.setBackgroundColor(getResources().getColor(SelectOptions.getInstance().getTitleBg()));
         }
-        if(SelectOptions.getInstance().getTitleColor()!=0){
+        if (SelectOptions.getInstance().getTitleColor() != 0) {
             abc.getTitleTextView().setTextColor(getResources().getColor(SelectOptions.getInstance().getTitleColor()));
         }
-        if(SelectOptions.getInstance().getTitleLiftColor()!=0){
+        if (SelectOptions.getInstance().getTitleLiftColor() != 0) {
             abc.getLeftIconView().setColorFilter(getResources().getColor(SelectOptions.getInstance().getTitleLiftColor()));
         }
-        if(SelectOptions.getInstance().getTitleRightColor()!=0){
+        if (SelectOptions.getInstance().getTitleRightColor() != 0) {
             abc.getRightTextView().setTextColor(getResources().getColor(SelectOptions.getInstance().getTitleRightColor()));
         }
         abc.setOnLeftIconClickListener(new OnActionBarChildClickListener() {
@@ -105,12 +107,12 @@ public class FileSelectorActivity extends AppCompatActivity implements OnItemCli
         abc.setOnRightTextClickListener(new OnActionBarChildClickListener() {
             @Override
             public void onClick(View v) {
-                if(SelectOptions.getInstance().isOnlySelectFolder()){
+                if (SelectOptions.getInstance().isOnlySelectFolder()) {
                     mSelectedList.add(mCurFolder);
                 }
                 //选中
                 if (mSelectedList.isEmpty()) {
-                    return ;
+                    return;
                 }
                 //不为空
                 Intent result = new Intent();
@@ -119,7 +121,7 @@ public class FileSelectorActivity extends AppCompatActivity implements OnItemCli
                 finish();
             }
         });
-        if(SelectOptions.getInstance().isOnlyShowFolder()){
+        if (SelectOptions.getInstance().isOnlyShowFolder()) {
             abc.getRightTextView().setText("选中");
         }
         mRecyclerView = findViewById(R.id.rcv_file_list);
@@ -136,20 +138,21 @@ public class FileSelectorActivity extends AppCompatActivity implements OnItemCli
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.onAttachedToRecyclerView(mRecyclerView);
         mAdapter.setOnItemClickListener(this);
-
+        List<BreadModel> breadModelList = FileUtils.getBreadModeListFromPath(mSdCardList, mCurFolder);
         mBreadRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        mBreadAdapter = new BreadAdapter(new ArrayList<BreadModel>());
+        mBreadAdapter = new BreadAdapter(breadModelList);
         mBreadRecyclerView.setAdapter(mBreadAdapter);
         mBreadAdapter.onAttachedToRecyclerView(mBreadRecyclerView);
         mBreadAdapter.setOnItemChildClickListener(this);
 
     }
+
     private void initData() {
         executeListTask(mSelectedFileList, mCurFolder, SelectOptions.getInstance().getFileTypes(), SelectOptions.getInstance().getSortType());
     }
 
     private void executeListTask(List<EssFile> essFileList, String queryPath, String[] types, int sortType) {
-        essFileListTask = new EssFileListTask(essFileList, queryPath, types, sortType,SelectOptions.getInstance().isOnlyShowFolder(), this);
+        essFileListTask = new EssFileListTask(essFileList, queryPath, types, sortType, SelectOptions.getInstance().isOnlyShowFolder(), this);
         essFileListTask.execute();
     }
 
@@ -159,6 +162,7 @@ public class FileSelectorActivity extends AppCompatActivity implements OnItemCli
             showPopupWindow();
         }
     }
+
     /**
      * 显示选择SdCard的PopupWindow
      * 点击其他区域隐藏，阴影
@@ -177,7 +181,7 @@ public class FileSelectorActivity extends AppCompatActivity implements OnItemCli
         final SelectSdcardAdapter adapter = new SelectSdcardAdapter(FileUtils.getAllSdCardList(mSdCardList));
         recyclerView.setAdapter(adapter);
         adapter.onAttachedToRecyclerView(recyclerView);
-        adapter.setOnItemClickListener(new  OnItemClickListener() {
+        adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapterIn, View view, int position) {
                 mSelectSdCardWindow.dismiss();
@@ -187,6 +191,7 @@ public class FileSelectorActivity extends AppCompatActivity implements OnItemCli
         });
         mSelectSdCardWindow.showAsDropDown(mImbSelectSdCard);
     }
+
     @Override
     public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
         if (adapter.equals(mBreadAdapter) && view.getId() == R.id.btn_bread) {
@@ -252,12 +257,13 @@ public class FileSelectorActivity extends AppCompatActivity implements OnItemCli
                     mSelectedList.add(item.getAbsolutePath());
                 }
                 mAdapter.getData().get(position).setChecked(!mAdapter.getData().get(position).isChecked());
-               // mAdapter.notifyItemChanged(position, "");
+                // mAdapter.notifyItemChanged(position, "");
                 mAdapter.notifyDataSetChanged();
                 abc.getRightTextView().setText(String.format(getString(R.string.selected_file_count), String.valueOf(mSelectedFileList.size()), String.valueOf(SelectOptions.getInstance().maxCount)));
             }
         }
     }
+
     /**
      * 查找文件位置
      */
@@ -272,9 +278,10 @@ public class FileSelectorActivity extends AppCompatActivity implements OnItemCli
 
     @Override
     public void onLoadFileCount(int posistion) {
-        essFileCountTask = new EssFileCountTask(posistion, mAdapter.getData().get(posistion).getAbsolutePath(), SelectOptions.getInstance().getFileTypes(),SelectOptions.getInstance().isOnlyShowFolder(), this);
+        essFileCountTask = new EssFileCountTask(posistion, mAdapter.getData().get(posistion).getAbsolutePath(), SelectOptions.getInstance().getFileTypes(), SelectOptions.getInstance().isOnlyShowFolder(), this);
         essFileCountTask.execute();
     }
+
     /**
      * 查找到文件列表后
      *
@@ -313,11 +320,12 @@ public class FileSelectorActivity extends AppCompatActivity implements OnItemCli
         //恢复之前的滚动位置
         mRecyclerView.scrollBy(0, scrollYPosition);
     }
+
     @Override
     public void onFindChildFileAndFolderCount(int position, String childFileCount, String childFolderCount) {
         mAdapter.getData().get(position).setChildCounts(childFileCount, childFolderCount);
-       // mAdapter.notifyItemChanged(position, "childCountChanges");
-        mAdapter. notifyDataSetChanged();
+        // mAdapter.notifyItemChanged(position, "childCountChanges");
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -328,15 +336,16 @@ public class FileSelectorActivity extends AppCompatActivity implements OnItemCli
         }
         executeListTask(mSelectedFileList, new File(mCurFolder).getParentFile().getAbsolutePath() + File.separator, SelectOptions.getInstance().getFileTypes(), SelectOptions.getInstance().getSortType());
     }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         // TODO: 2019/3/12 暂时移除
 //        EventBus.getDefault().unregister(this);
-        if(essFileListTask!=null){
+        if (essFileListTask != null) {
             essFileListTask.cancel(true);
         }
-        if(essFileCountTask!=null){
+        if (essFileCountTask != null) {
             essFileCountTask.cancel(true);
         }
 

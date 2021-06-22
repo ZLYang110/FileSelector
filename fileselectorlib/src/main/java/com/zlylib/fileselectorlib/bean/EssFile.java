@@ -26,7 +26,7 @@ public class EssFile implements Parcelable {
     public static final int CAPTURE = 0;
     public static final int MEDIA = 1;
 
-    private String mFilePath;
+    private String mFilePath;   
     private String mimeType;
     private String childFolderCount = "加载中";
     private String childFileCount = "加载中";

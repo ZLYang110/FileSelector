@@ -90,6 +90,7 @@ public final class FileUtils {
     public static List<BreadModel> getBreadModeListFromPath(List<String> mSdCardList, String path) {
         List<String> pathList = new ArrayList<>();
         for (int i = 0; i < mSdCardList.size(); i++) {
+            LogUtils.debug("getBreadModeListFromPath","--"+mSdCardList.get(i));
             if (i == 0) {
                 //内部存储设备
                 path = path.replace(mSdCardList.get(i), "/内部存储设备");
@@ -97,13 +98,14 @@ public final class FileUtils {
                 path = path.replace(mSdCardList.get(i), "/SD卡" + i);
             }
         }
+
         if (!TextUtils.isEmpty(path)) {
             String[] a = path.substring(1, path.length()).split("/");
             pathList = Arrays.asList(a);
         }
         List<BreadModel> breadModelList = new ArrayList<>();
-        for (String str :
-                pathList) {
+        for (String str :  pathList) {
+            LogUtils.debug("getBreadModeListFromPath",str);
             BreadModel breadModel = new BreadModel();
             breadModel.setCurName(str);
             breadModelList.add(breadModel);

@@ -35,7 +35,7 @@ allprojects {
 
 ```
 //AndroidX
-implementation 'com.github.ZLYang110:FileSelector:2.1.2'
+implementation 'com.github.ZLYang110:FileSelector:2.1.3'
 
  //support
 //implementation 'com.github.ZLYang110:FileSelector:1.0.2'
@@ -121,8 +121,7 @@ implementation 'com.github.ZLYang110:FileSelector:2.1.2'
             if(data!=null){
                 ArrayList<String> essFileList = data.getStringArrayListExtra(Const.EXTRA_RESULT_SELECTION);
                 StringBuilder builder = new StringBuilder();
-                for (String file :
-                        essFileList) {
+                for (String file : essFileList) {
                     builder.append(file).append("\n");
                 }
                 tv_backResult.setText(builder.toString());
@@ -152,6 +151,10 @@ setTitleLiftColor | 设置标题左边箭头颜色  | 白色
 setTitleRightColor | 设置标题右边字体颜色  | 白色
 
 # 更新日志
+
+2.1.3
+----
+  -  优化程序，root路径先显示路径，同步加载文件列表等等
 
 2.1.2
 ----
