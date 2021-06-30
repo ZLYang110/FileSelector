@@ -27,7 +27,7 @@ public class SelectOptions {
     //public boolean onlyShowImages = false;//只显示图片
     //public boolean onlyShowVideos = false;//只显示视频
     public int request_code;//返回码
-    public String targetPath = defaultTargetPath;
+    public String targetPath = defaultTargetPath;//设置默认目录
 
     private int titleBg = 0;//标题背景颜色
     private int titleColor = 0;//标题文字颜色
