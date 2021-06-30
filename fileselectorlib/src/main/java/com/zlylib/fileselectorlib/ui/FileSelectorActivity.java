@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -77,7 +78,11 @@ public class FileSelectorActivity extends AppCompatActivity implements OnItemCli
         mSdCardList = FileUtils.getAllSdPaths(this);
         if (!mSdCardList.isEmpty()) {
             mCurFolder = mSdCardList.get(0) + File.separator;
+            if(FileUtils.exist(SelectOptions.getInstance().getTargetPath())){
+                mCurFolder = SelectOptions.getInstance().getTargetPath();
+            }
         }
+
 
         initUi();
         initData();

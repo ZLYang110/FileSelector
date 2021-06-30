@@ -35,7 +35,7 @@ allprojects {
 
 ```
 //AndroidX
-implementation 'com.github.ZLYang110:FileSelector:2.1.3'
+implementation 'com.github.ZLYang110:FileSelector:2.1.4'
 
  //support
 //implementation 'com.github.ZLYang110:FileSelector:1.0.2'
@@ -63,6 +63,7 @@ implementation 'com.github.ZLYang110:FileSelector:2.1.3'
                 //.setSortType(FileSelector.BY_SIZE_DESC) //设置大小排序
                 //.setSortType(FileSelector.BY_EXTENSION_DESC) //设置类型排序
                 .requestCode(1) //设置返回码
+                .setTargetPath("/storage/emulated/0/Android/data/") //设置默认目录
                 .start();
 ```
 
@@ -149,8 +150,13 @@ setTilteBg | 设置标题背景颜色  | ?attr/colorPrimary
 setTitleColor | 设置标题颜色  | 白色
 setTitleLiftColor | 设置标题左边箭头颜色  | 白色
 setTitleRightColor | 设置标题右边字体颜色  | 白色
+setTargetPath | 设置默认目录  | 根目录
 
 # 更新日志
+
+2.1.4
+----
+  -  设置默认目录
 
 2.1.3
 ----

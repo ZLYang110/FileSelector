@@ -145,6 +145,7 @@ public class MainActivity extends AppCompatActivity {
                 //.setSortType(FileSelector.BY_SIZE_DESC) //设置大小排序
                 //.setSortType(FileSelector.BY_EXTENSION_DESC) //设置类型排序
                 .requestCode(1) //设置返回码
+                .setTargetPath("/storage/emulated/0/Android/data/")
                 .start();
     }
 
