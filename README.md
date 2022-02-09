@@ -35,7 +35,7 @@ allprojects {
 
 ```
 //AndroidX
-implementation 'com.github.ZLYang110:FileSelector:2.1.5'
+implementation 'com.github.ZLYang110:FileSelector:2.1.6'
 
  //support
 //implementation 'com.github.ZLYang110:FileSelector:1.0.2'
@@ -163,6 +163,9 @@ setTitleRightColor | 设置标题右边字体颜色  | 白色
 setTargetPath | 设置默认目录  | 根目录
 
 # 更新日志
+2.1.6
+----
+  -  优化已知问题
 
 2.1.5
 ----
