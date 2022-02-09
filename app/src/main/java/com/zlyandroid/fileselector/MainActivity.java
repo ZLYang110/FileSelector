@@ -175,7 +175,13 @@ public class MainActivity extends AppCompatActivity {
                 .requestCode(1) //设置返回码
                 .start();
     }
-
+    public void openOnlyPDF( ) {
+        FileSelector.from(this)
+                .setMaxCount(1) //设置最大选择数
+                .setFileTypes( "pdf") //设置文件类型
+                .requestCode(1) //设置返回码
+                .start();
+    }
     public void openOustomizeTitle( ) {
         FileSelector.from(this)
                 .setTilteBg(R.color.titleBg) //不填写默认是： ?attr/colorPrimary

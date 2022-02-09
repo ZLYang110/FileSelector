@@ -35,7 +35,7 @@ allprojects {
 
 ```
 //AndroidX
-implementation 'com.github.ZLYang110:FileSelector:2.1.4'
+implementation 'com.github.ZLYang110:FileSelector:2.1.5'
 
  //support
 //implementation 'com.github.ZLYang110:FileSelector:1.0.2'
@@ -57,7 +57,7 @@ implementation 'com.github.ZLYang110:FileSelector:2.1.4'
                 //.onlySelectFolder()  //只能选择文件夹
                // .isSingle() // 只能选择一个
                 .setMaxCount(5) //设置最大选择数
-                .setFileTypes("png", "doc","apk", "mp3", "gif", "txt", "mp4", "zip") //设置文件类型
+                .setFileTypes("png", "doc","apk", "mp3", "gif", "txt", "mp4", "zip", "pdf") //设置文件类型
                 .setSortType(FileSelector.BY_NAME_ASC) //设置名字排序
                 //.setSortType(FileSelector.BY_TIME_ASC) //设置时间排序
                 //.setSortType(FileSelector.BY_SIZE_DESC) //设置大小排序
@@ -95,8 +95,18 @@ implementation 'com.github.ZLYang110:FileSelector:2.1.4'
                 .start();
 ```
 
+##### 五、 只显示pdf文件
 
-##### 五、 自定义标题颜色
+```
+ FileSelector.from(this)
+                .setMaxCount(1) //设置最大选择数
+                .setFileTypes( "pdf") //设置文件类型
+                .requestCode(1) //设置返回码
+                .start();
+```
+
+
+##### 六、 自定义标题颜色
 
 ```
   FileSelector.from(this)
@@ -111,7 +121,7 @@ implementation 'com.github.ZLYang110:FileSelector:2.1.4'
                  .start();
 ```
 
-##### 六、 接收返回的文件数据，在 ++onActivityResult++ 方法中获取。选中文件以链表方式返回， ++EssFile++ 类为载体
+##### 七、 接收返回的文件数据，在 ++onActivityResult++ 方法中获取。选中文件以链表方式返回， ++EssFile++ 类为载体
 
 
 ```
@@ -153,6 +163,10 @@ setTitleRightColor | 设置标题右边字体颜色  | 白色
 setTargetPath | 设置默认目录  | 根目录
 
 # 更新日志
+
+2.1.5
+----
+  -  优化已知问题
 
 2.1.4
 ----

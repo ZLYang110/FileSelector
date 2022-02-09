@@ -27,7 +27,11 @@ public class EssFileFilter implements FileFilter {
                 }
             }
         }else {
-            return true;
+            if (file.isHidden()) {
+                return false;
+            }else{
+                return true;
+            }
         }
         return false;
     }
