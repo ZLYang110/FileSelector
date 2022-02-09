@@ -1,5 +1,6 @@
 apply plugin: 'com.android.library'
-
+apply plugin: 'com.github.dcendents.android-maven' //帮你发布到jcenter
+group="com.github.ZLYang110"//xxxx为你的用户名
 android {
     compileSdkVersion 27
     buildToolsVersion "29.0.3"
