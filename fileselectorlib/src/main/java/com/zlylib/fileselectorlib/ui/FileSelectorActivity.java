@@ -1,12 +1,12 @@
 package com.zlylib.fileselectorlib.ui;
 
 import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Environment;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +16,6 @@ import android.widget.PopupWindow;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.OnItemChildClickListener;
@@ -35,7 +34,6 @@ import com.zlylib.fileselectorlib.core.EssFileCountTask;
 import com.zlylib.fileselectorlib.core.EssFileListTask;
 import com.zlylib.fileselectorlib.utils.Const;
 import com.zlylib.fileselectorlib.utils.FileUtils;
-import com.zlylib.fileselectorlib.utils.LogUtils;
 import com.zlylib.titlebarlib.ActionBarCommon;
 import com.zlylib.titlebarlib.OnActionBarChildClickListener;
 
@@ -56,6 +54,7 @@ public class FileSelectorActivity extends AppCompatActivity implements OnItemCli
     private RecyclerView mRecyclerView;
     private RecyclerView mBreadRecyclerView;
     private ImageView mImbSelectSdCard;
+    private List<String> mSdCardDescList;
     /**
      * 已选中的文件列表
      */
@@ -70,22 +69,56 @@ public class FileSelectorActivity extends AppCompatActivity implements OnItemCli
     private EssFileCountTask essFileCountTask;
 
     private PopupWindow mSelectSdCardWindow;
+    private BroadcastReceiver mScanListener = new BroadcastReceiver() { // from class: com.android.rk.RockExplorer.16
+        @Override // android.content.BroadcastReceiver
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action != null && (action.equals(Intent.ACTION_MEDIA_MOUNTED) || action.equals(Intent.ACTION_MEDIA_UNMOUNTED))) {
+                String tmpCurDir = mCurFolder;
+                initSdcard();
+                if (action.equals(Intent.ACTION_MEDIA_UNMOUNTED)) {
+                    android.util.Log.d("fileSelect", "tmpCurDir：" + tmpCurDir);
+                    android.util.Log.d("fileSelect", "mCurFolder：" + mCurFolder);
+                    if (!tmpCurDir.startsWith(mCurFolder)) {
+                        mSelectedFileList.clear();
+                        initBreadView();
+                        android.util.Log.d("fileSelect", intent.getDataString());
+                        initData();
+                    }
+
+                }
+
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_file);
+        initSdcard();
+        initUi();
+        initData();
+        registBroadcastRec();
+    }
+
+    private void initSdcard() {
         mSdCardList = FileUtils.getAllSdPaths(this);
+        mSdCardDescList = FileUtils.getAllSdCardList(this, mSdCardList);
         if (!mSdCardList.isEmpty()) {
             mCurFolder = mSdCardList.get(0) + File.separator;
-            if(FileUtils.exist(SelectOptions.getInstance().getTargetPath())){
+            if (FileUtils.exist(SelectOptions.getInstance().getTargetPath())) {
                 mCurFolder = SelectOptions.getInstance().getTargetPath();
             }
         }
+        if (mImbSelectSdCard != null) {
+            if (!mSdCardList.isEmpty() && mSdCardList.size() > 1) {
+                mImbSelectSdCard.setVisibility(View.VISIBLE);
+            } else {
+                mImbSelectSdCard.setVisibility(View.GONE);
+            }
+        }
 
-
-        initUi();
-        initData();
     }
 
     @SuppressLint("ResourceAsColor")
@@ -143,13 +176,19 @@ public class FileSelectorActivity extends AppCompatActivity implements OnItemCli
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.onAttachedToRecyclerView(mRecyclerView);
         mAdapter.setOnItemClickListener(this);
-        List<BreadModel> breadModelList = FileUtils.getBreadModeListFromPath(mSdCardList, mCurFolder);
-        mBreadRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        mBreadAdapter = new BreadAdapter(breadModelList);
-        mBreadRecyclerView.setAdapter(mBreadAdapter);
-        mBreadAdapter.onAttachedToRecyclerView(mBreadRecyclerView);
-        mBreadAdapter.setOnItemChildClickListener(this);
+        initBreadView();
 
+    }
+
+    private void initBreadView() {
+        if (mBreadRecyclerView != null) {
+            List<BreadModel> breadModelList = FileUtils.getBreadModeListFromPath(mSdCardList, mSdCardDescList, mCurFolder);
+            mBreadRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+            mBreadAdapter = new BreadAdapter(breadModelList);
+            mBreadRecyclerView.setAdapter(mBreadAdapter);
+            mBreadAdapter.onAttachedToRecyclerView(mBreadRecyclerView);
+            mBreadAdapter.setOnItemChildClickListener(this);
+        }
     }
 
     private void initData() {
@@ -183,7 +222,8 @@ public class FileSelectorActivity extends AppCompatActivity implements OnItemCli
         mSelectSdCardWindow.setOutsideTouchable(true);
         RecyclerView recyclerView = popView.findViewById(R.id.rcv_pop_select_sdcard);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        final SelectSdcardAdapter adapter = new SelectSdcardAdapter(FileUtils.getAllSdCardList(mSdCardList));
+
+        final SelectSdcardAdapter adapter = new SelectSdcardAdapter(mSdCardDescList);
         recyclerView.setAdapter(adapter);
         adapter.onAttachedToRecyclerView(recyclerView);
         adapter.setOnItemClickListener(new OnItemClickListener() {
@@ -191,7 +231,7 @@ public class FileSelectorActivity extends AppCompatActivity implements OnItemCli
             public void onItemClick(BaseQuickAdapter adapterIn, View view, int position) {
                 mSelectSdCardWindow.dismiss();
                 mHasChangeSdCard = true;
-                executeListTask(mSelectedFileList, FileUtils.getChangeSdCard(adapter.getData().get(position), mSdCardList), SelectOptions.getInstance().getFileTypes(), SelectOptions.getInstance().getSortType());
+                executeListTask(mSelectedFileList, FileUtils.getChangeSdCard(adapter.getData().get(position), mSdCardList, mSdCardDescList), SelectOptions.getInstance().getFileTypes(), SelectOptions.getInstance().getSortType());
             }
         });
         mSelectSdCardWindow.showAsDropDown(mImbSelectSdCard);
@@ -201,7 +241,7 @@ public class FileSelectorActivity extends AppCompatActivity implements OnItemCli
     public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
         if (adapter.equals(mBreadAdapter) && view.getId() == R.id.btn_bread) {
             //点击某个路径时
-            String queryPath = FileUtils.getBreadModelListByPosition(mSdCardList, mBreadAdapter.getData(), position);
+            String queryPath = FileUtils.getBreadModelListByPosition(mSdCardList, mSdCardDescList, mBreadAdapter.getData(), position);
             if (mCurFolder.equals(queryPath)) {
                 return;
             }
@@ -300,7 +340,7 @@ public class FileSelectorActivity extends AppCompatActivity implements OnItemCli
         }
         mCurFolder = queryPath;
         mAdapter.setNewInstance(fileList);
-        List<BreadModel> breadModelList = FileUtils.getBreadModeListFromPath(mSdCardList, mCurFolder);
+        List<BreadModel> breadModelList = FileUtils.getBreadModeListFromPath(mSdCardList, mSdCardDescList, mCurFolder);
         if (mHasChangeSdCard) {
             mBreadAdapter.setNewInstance(breadModelList);
             mHasChangeSdCard = false;
@@ -342,11 +382,22 @@ public class FileSelectorActivity extends AppCompatActivity implements OnItemCli
         executeListTask(mSelectedFileList, new File(mCurFolder).getParentFile().getAbsolutePath() + File.separator, SelectOptions.getInstance().getFileTypes(), SelectOptions.getInstance().getSortType());
     }
 
+    public void registBroadcastRec() {
+        IntentFilter f = new IntentFilter();
+        f.addAction("android.intent.action.MEDIA_MOUNTED");
+        f.addAction("android.intent.action.MEDIA_UNMOUNTED");
+        f.addAction("android.os.storage.action.VOLUME_STATE_CHANGED");
+        f.addAction("android.intent.action.MEDIA_BAD_REMOVAL");
+        f.addDataScheme("file");
+        registerReceiver(this.mScanListener, f);
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         // TODO: 2019/3/12 暂时移除
 //        EventBus.getDefault().unregister(this);
+        unregisterReceiver(this.mScanListener);
         if (essFileListTask != null) {
             essFileListTask.cancel(true);
         }

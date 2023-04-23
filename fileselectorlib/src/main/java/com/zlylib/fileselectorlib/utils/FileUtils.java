@@ -87,15 +87,15 @@ public final class FileUtils {
      * @param path        路径名
      * @return 面包屑导航列表
      */
-    public static List<BreadModel> getBreadModeListFromPath(List<String> mSdCardList, String path) {
+    public static List<BreadModel> getBreadModeListFromPath(List<String> mSdCardList,List<String> mSdCardDescList, String path) {
         List<String> pathList = new ArrayList<>();
         for (int i = 0; i < mSdCardList.size(); i++) {
             LogUtils.debug("getBreadModeListFromPath","--"+mSdCardList.get(i));
             if (i == 0) {
                 //内部存储设备
-                path = path.replace(mSdCardList.get(i), "/内部存储设备");
+                path = path.replace(mSdCardList.get(i), "/"+mSdCardDescList.get(i));
             } else {
-                path = path.replace(mSdCardList.get(i), "/SD卡" + i);
+                path = path.replace(mSdCardList.get(i), "/"+mSdCardDescList.get(i));
             }
         }
 
@@ -121,7 +121,7 @@ public final class FileUtils {
      * @param position       点击位置
      * @return 新列表
      */
-    public static String getBreadModelListByPosition(List<String> mSdCardList, List<BreadModel> breadModelList, int position) {
+    public static String getBreadModelListByPosition(List<String> mSdCardList,List<String> mSdCardDescList, List<BreadModel> breadModelList, int position) {
         StringBuilder result = new StringBuilder("/");
         for (int i = 0; i < breadModelList.size(); i++) {
             if (position >= i) {
@@ -131,10 +131,12 @@ public final class FileUtils {
             }
         }
         String resultStr = result.toString();
-        if (resultStr.startsWith("/内部存储设备")) {
-            resultStr = resultStr.replace("/内部存储设备", mSdCardList.get(0));
-        } else if (resultStr.startsWith("/SD卡")) {
-            resultStr = resultStr.replace("/SD卡" + String.valueOf(resultStr.charAt(4)), mSdCardList.get(Integer.valueOf(String.valueOf(resultStr.charAt(4)))));
+        for(int i=0;i<mSdCardDescList.size();i++){
+            String defaultDir="/"+mSdCardDescList.get(i);
+            if (resultStr.startsWith(defaultDir)) {
+                resultStr = resultStr.replace(defaultDir, mSdCardList.get(i));
+                break;
+            }
         }
         return resultStr;
     }
@@ -145,15 +147,14 @@ public final class FileUtils {
      * @param mSdCardList
      * @return
      */
-    public static String getChangeSdCard(String sdCardName, List<String> mSdCardList){
+    public static String getChangeSdCard(String sdCardName, List<String> mSdCardList,List<String> mSdCardDescList){
         if(TextUtils.isEmpty(sdCardName)){
             return Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator;
         }
-        if(sdCardName.startsWith("内部存储设备")){
-            return mSdCardList.get(0) + File.separator;
-        }
-        if(sdCardName.startsWith("SD卡")){
-            return mSdCardList.get(Integer.valueOf(String.valueOf(sdCardName.charAt(3)))) + File.separator;
+        for(int i=0;i<mSdCardDescList.size();i++){
+            if(sdCardName.startsWith(mSdCardDescList.get(i))){
+                return mSdCardList.get(i) + File.separator;
+            }
         }
         return Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator;
     }
@@ -915,6 +916,9 @@ public final class FileUtils {
         try {
             mMethodGetPaths = mStorageManager.getClass().getMethod("getVolumePaths");
             paths = (String[]) mMethodGetPaths.invoke(mStorageManager);
+            for(String  path :paths){
+                android.util.Log.d("fileSelect",path);
+            }
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -924,20 +928,56 @@ public final class FileUtils {
         }
         return new ArrayList<String>();
     }
-
+    public static String getRealName(Context context, String rootDir){
+        Class volumeInfoClazz = null;
+        Method getVolumes = null;
+        Method getPath = null;
+        Method getUserLabel = null;
+        Object[] volumes = null;
+        try {
+            StorageManager mStorageManager = (StorageManager) context
+                    .getSystemService(context.STORAGE_SERVICE);//storage
+            volumeInfoClazz = Class.forName("android.os.storage.StorageVolume");
+            getVolumes = StorageManager.class.getMethod("getVolumeList");
+            getPath = volumeInfoClazz.getMethod("getPath");
+            getUserLabel = volumeInfoClazz.getMethod("getUserLabel");
+            volumes = (Object[])getVolumes.invoke(mStorageManager);
+            for (Object vol : volumes) {
+                String path = (String) getPath.invoke(vol);
+                if(path.equals(rootDir)){
+                    return  (String) getUserLabel.invoke(vol);
+                }
+            }
+        }catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return "";
+    }
     /**
      * 获取用于显示的Sd卡列表
      * @param sdCardList sdCardList
      * @return List
      */
-    public static List<String> getAllSdCardList(List<String> sdCardList) {
+    public static List<String> getAllSdCardList(Context context,List<String> sdCardList) {
         List<String> resultList = new ArrayList<>();
         for (int i = 0; i < sdCardList.size(); i++) {
             if (i == 0) {
-                //内部存储设备
-                resultList.add("内部存储设备");
+                String label=FileUtils.getRealName(context,sdCardList.get(i));
+                if(TextUtils.isEmpty(label)){
+                    //内部存储设备
+                    resultList.add("内部存储设备");
+                }else{
+                    resultList.add(label);
+                }
+
             } else {
-                resultList.add("SD卡"+i);
+                String label=FileUtils.getRealName(context,sdCardList.get(i));
+                if(TextUtils.isEmpty(label)){
+                    //内部存储设备
+                    resultList.add("SD卡"+i);
+                }else{
+                    resultList.add(label);
+                }
             }
         }
         return resultList;
